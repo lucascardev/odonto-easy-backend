@@ -1,6 +1,5 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -8,4 +7,178 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+}
+
+model Clinic {
+  id               Int          @id @default(autoincrement())
+  cnpj             String       @unique
+  socialreason     String       @unique
+  fantasy          String       @unique
+  multipleclinics  Boolean      @default(false)
+  numberofbranches Int          @default(0)
+  technicalmanager Technicalmanager?  @relation(fields: [tmcpf], references: [cpf])
+  tmcpf            String?
+  legalresponsible Legalresponsible?  @relation(fields: [lrcpf], references: [cpf])
+  lrcpf            String?
+  dentalchairs     Int?
+  country          String?
+  state            String?
+  city             String?
+  neighborhood     String?
+  CEP              String?
+  website          String?
+  mainemail        Email?   @relation(fields: [mainemail_id], references: [id])
+  mainemail_id     Int?
+  averagepatientsperday Int?
+  language         Language @default(ENGLISH)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Email {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+}
+
+model Clinic_phones {
+  id        Int       @id @default(autoincrement())
+  phonetype Phonetypes
+  phone_number String @unique
+}
+
+model Schedule {
+  id         Int        @id
+  dentist    Dentist    @relation(fields: [id], references: [id])
+  patient    Patient?    @relation(fields: [patient_id], references: [id])
+  patient_id Int?
+  day Int
+  hour Int
+}
+
+model Technicalmanager {
+  cpf String @id
+  fullname String
+  contactmeans Contactmeans @default(WHATTSAPPmessage)
+  registred Boolean @default(false)
+  mainemail Email? @relation(fields: [mainemail_id], references: [id])
+  mainemail_id Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Legalresponsible {
+   cpf String @id
+   fullname String
+   contactmeans Contactmeans @default(WHATTSAPPmessage)
+   registred Boolean @default(false)
+   mainemail Email? @relation(fields: [mainemail_id], references: [id])
+   mainemail_id Int?
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+}
+
+model Patient {
+  id        Int      @id @default(autoincrement())
+  fullname  String
+  cpf       String   @unique
+  password  String   @default(cuid())
+  cellphone_number String?
+  email     String?
+  contactmeans Contactmeans @default(WHATTSAPPmessage)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Dentist {
+  id        Int      @id @default(autoincrement())
+  firstname     String
+  lastname      String
+  username  String   @default(cuid()) 
+  password  String   @default(cuid())
+  contactmeans Contactmeans @default(WHATTSAPPmessage)
+  cellphone_number String?
+  mainemail Email? @relation(fields: [mainemail_id], references: [id])
+  mainemail_id Int?
+  active    Boolean  @default(true)
+  specialization Clinic_specializations[]
+  comission Float?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Clinic_specializations {
+   id         Int         @id @default(autoincrement())
+   specialization Specializations
+   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Specializations {
+   ORAL_MAXILLOFACIAL_SURGERY_AND_TRAUMATOLOGY
+   DENTISTRY
+   TEMPORO_MANDIBULAR_AND_OROFACIAL_PAIN_DYSFUNCTION
+   ENDODONTICS
+   IMPLANTOLOGY
+   PEDIATRIC_DENTISTRY
+   ORTHODONTICS
+   PERIODONTICS 
+   RADIOLOGY
+   COLLECTIVE_HEALTH
+   STOMATOLOGY
+   ELDERLY_DENTIST
+   FORENSIC_DENTISTRY
+   PATIENTS_WITH_SPECIAL_NEEDS
+   OCCUPATIONAL_DENTISTRY
+   DENTAL_PROSTHESIS
+   ORAL_AND_MAXILLOFACIAL_PROSTHESIS
+   ORAL_PATHOLOGY
+}
+
+model Employeer {
+  id        Int      @id @default(autoincrement())
+  firstname     String
+  lastname      String
+  username  String  @default(cuid()) 
+  password  String   @default(cuid())
+  role      Clinic_Roles[] @relation(references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Clinic_Roles {
+  id        Int      @id @default(autoincrement())
+  name      String
+  description String?
+  employers Employeer[] @relation(references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Dental_insurance {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  compensation_date  Int?
+  compensation_value Int?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Contactmeans {
+  WHATTSAPP_message
+  WHATTSAPP_call
+  CALL
+  SMS
+}
+
+enum Phonetypes {
+  BRASILIAN_CELLPHONE_NUMBER
+  BRASILIAN_FIX_NUMBER
+  EUA_NUMBER
+  NONE
+}
+
+enum Language {
+  ENGLISH
+  PORTUGUESE
 }
