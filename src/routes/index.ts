@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import ClinicController from "../controllers/ClinicControllers/ClinicController";
+import ClinicController from "../controllers/Clinics/ClinicControllers/ClinicController";
 const routes = Router();
 
 routes.get("/clinic/list", ClinicController.index);

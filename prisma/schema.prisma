@@ -29,7 +29,7 @@ model Clinic {
   clinic_phones    Clinic_phones[]
   patients         Patient[]  
   destists         Dentist[]  
-  employeers       Employeer[] 
+  employees        Employer[] 
   technicalmanager Technicalmanager?  
   legalresponsible Legalresponsible? 
   //credentials
@@ -81,6 +81,7 @@ model Clinic_payment_information {
 model Clinic_finance_options {
   clinic  Clinic @relation(fields: [id], references: [registered_id])
   id      String @id
+  commission_template      Float 
   calculation_hour_of_day Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -97,7 +98,7 @@ model Clinic_finance_month {
   wage_payment_day     Int?
   wages_paid           Boolean?
   total_wage           Float?
-  dentists_comissions  Float? 
+  dentists_commissions  Float? 
   // Profit
   month_all_profit   Float?
   month_discounts    Float?
@@ -237,7 +238,7 @@ model Schedule {
 
 model Treatment_evolution {
   id            String      @id@default(cuid())
-  shedule       Schedule    @relation(fields: [hour, date, dentist_id], references: [hour, date, dentist_id])
+  shedule       Schedule    @relation(fields: [hour, date, dentist_id], references: [hour, date, dentist_id]) //BUG
   hour          DateTime   @unique
   date          DateTime   @unique
   dentist       Dentist    @relation(fields: [dentist_id], references:[id])    
@@ -297,16 +298,16 @@ model Legalresponsible {
 }
 
 model Patient {
-  id            String      @id @default(uuid())
+  id               String      @id @default(uuid())
   clinic_prontuary_number   Int
   // Patient Information
-  fullname      String
-  birth_date    DateTime
-  age           Int
-  gender        Gender
-  brazilian_cpf String?      @unique
-  brazilian_rg  String?      @unique
-  password      String       
+  fullname         String
+  birth_date       DateTime
+  age              Int
+  gender           Gender
+  brazilian_cpf    String?      @unique
+  brazilian_rg     String?      @unique
+  password         String      
   clinic           Clinic    @relation("Patientof", fields: [clinic_id], references: [registered_id])
   clinic_id        String
   cellphone_number String?
@@ -5812,7 +5813,7 @@ model Dentist {
   username      String       @default(cuid()) 
   password      String       @default(cuid())
   contactmeans  Contact_means?
-  shedule       Schedule     
+  shedule       Schedule?     
   cellphone_number String?
   clinic    Clinic   @relation("Clinic_relation", fields: [clinic_id], references: [registered_id])
   clinic_id String
@@ -5821,7 +5822,7 @@ model Dentist {
   specialization Clinic_specializations[]
   ortodontics_treatments Ortodontics[]
   implantology_treatments Implantology[]  
-  comission Float?
+  commission Float?      
   patients  Patient[]   @relation(references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -5857,7 +5858,7 @@ enum Specializations {
    ORAL_PATHOLOGY
 }
 
-model Employeer {
+model Employer {
   id        String      @id @default(uuid())
   firstname String
   lastname  String
@@ -5875,7 +5876,7 @@ model Clinic_Roles {
   id           String      @id @default(cuid())
   name         String
   description  String?
-  employer     Employeer[]
+  employer     Employer[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
