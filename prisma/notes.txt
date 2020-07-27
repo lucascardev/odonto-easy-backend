@@ -1,0 +1,4 @@
+We have to create always:
+LOGS
+WHATsUPDATED
+
