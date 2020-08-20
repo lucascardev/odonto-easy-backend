@@ -7,9 +7,10 @@
   "license": "MIT",
   "scripts": {
     "build": "sucrase ./src -d ./dist --transforms typescript,imports",
-    "migrate-save": "prisma migrate save --experimental",
-    "migrate-up": "prisma migrate up --experimental",
-    "generate": "dotenv -e .env.test npx prisma introspect",
+    "migrate-save": "prisma2 migrate save --experimental",
+    "migrate-up": "prisma2 migrate up --experimental",
+    "generate": "prisma2 generate",
+    "set-up": "yarn migrate-save & yarn migrate-up & yarn generate",
     "start": "node dist/server.js",
     "dev": "nodemon src/server.ts --ignore src/tests",
     "test": "jest"

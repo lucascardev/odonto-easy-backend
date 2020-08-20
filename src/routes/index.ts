@@ -5,6 +5,8 @@ import ChairController from "../controllers/Clinics/ClinicControllers/ChairContr
 import LegalResponsibleController from "../controllers/Clinics/ClinicControllers/LegalResponsibleController"
 import TechnicalManagerController from "../controllers/Clinics/ClinicControllers/TechnicalManagerController"
 
+import ScheduleController from "../controllers/Clinics/ScheduleControllers/ScheduleController"
+
 import DentistController from "../controllers/Clinics/DentistControllers/DentistController"
 
 import EmployerController from "../controllers/Clinics/EmployerControllers/EmployerController"
@@ -22,6 +24,9 @@ routes.post("/clinic/legal_responsible/new", LegalResponsibleController.store)
 routes.get("/clinic/technical_manager/show", TechnicalManagerController.index)
 routes.post("/clinic/technical_manager/new", TechnicalManagerController.store)
 
+routes.get("/clinic/scheduled/list", ScheduleController.index)
+routes.post("/clinic/scheduling/new", ScheduleController.store)
+
 routes.get("/clinic/dentists/list", DentistController.index)
 routes.post("/clinic/dentists/new", DentistController.store)
 
@@ -30,6 +35,7 @@ routes.get("/clinic/employees/list", EmployerController.index)
 routes.get("/clinic/patients/list", PatientController.index)
 routes.post("/clinic/patients/new", PatientController.store)
 routes.post("/clinic/patients/documents/questionnaires/anamnesis/new", AnamnesisController.store)
+
 
 
 

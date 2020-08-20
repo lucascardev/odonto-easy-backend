@@ -12,14 +12,18 @@ interface ReqBody {
 class PatientController {
   public async index(req: Request, res: Response): Promise<Response> {
     const { ClinicId }: ReqBody = req.body;
-    const patients = await prisma.patient.findMany({
-      where: {
-        clinic_id: {
-          equals: ClinicId,
+    try {
+      const patients = await prisma.patient.findMany({
+        where: {
+          clinic_id: {
+            equals: ClinicId,
+          },
         },
-      },
-    });
-    return res.status(200).json(patients);
+      });
+      return res.status(200).json(patients);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   public async store(req: Request, res: Response): Promise<Response> {

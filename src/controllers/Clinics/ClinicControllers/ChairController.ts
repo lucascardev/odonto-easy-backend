@@ -3,17 +3,16 @@ import { Request, Response } from "express";
 const prisma = new PrismaClient();
 
 interface ReqBody {
-  ClinicId: string;
   userId: string;
 }
 
 class ChairController {
   public async index(req: Request, res: Response): Promise<Response> {
-    const { ClinicId }: ReqBody = req.body;
+    const { clinic_id }: Chairs = req.body;
     const ClinicChairs = await prisma.chairs.findMany({
       where: {
         clinic_id: {
-          equals: ClinicId,
+          equals: clinic_id,
         },
       },
     });
@@ -21,13 +20,13 @@ class ChairController {
   }
 
   public async store(req: Request, res: Response) : Promise<Response> {
-       const {name, ClinicId, userId}: Chairs & ReqBody = req.body
+       const {name, clinic_id, userId}: Chairs & ReqBody = req.body
     const newChair = await prisma.chairs.create({
       data: {
         name: name,
         clinic: {
           connect: {
-            registered_id: ClinicId
+            registered_id: clinic_id
           }
         }
       }
@@ -36,7 +35,7 @@ class ChairController {
       data: {
         clinic : {
           connect : {
-            registered_id : ClinicId
+            registered_id : clinic_id
           }
         },
          description: "Chair of id " + newChair.id +"registered by user: " + userId  

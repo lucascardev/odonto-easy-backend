@@ -6,7 +6,7 @@ require('dotenv').config({
 const HOST:string = process.env.HOST
 const PORT:number = 3000
 
-app.listen(PORT, HOST, (err?: any) => {
+app.listen(PORT, '127.0.0.1', (err?: any) => {
   if (err) throw err;
   console.log(`> Ready - environment of ${process.env.NODE_ENV}`);
 });
