@@ -1,23 +1,9 @@
 import { Request, Response } from "express";
-import { PrismaClient, Payment_method } from "@prisma/client";
+import { PrismaClient, Payment_method, Clinic, Clinic_payment_information, Clinic_finance_options } from "@prisma/client";
 import moment from "moment";
 const prisma = new PrismaClient();
 
-interface ReqBody {
-  cnpj: string;
-  fantasy_name: string;
-  socialreason: string;
-  payment_method: Payment_method;
-  registered_credit_card?: boolean;
-  registered_debit_card?: boolean;
-  credit_card_number?: string;
-  credit_card_CCV?: string;
-  credit_card_name?: string;
-  debit_card_number?: string;
-  debit_card_CCV?: string;
-  debit_card_name?: string;
-  payment_day?: number;
-}
+
 
 class ClinicController {
   public async index(req: Request, res: Response): Promise<Response> {
@@ -39,14 +25,15 @@ class ClinicController {
       debit_card_CCV,
       debit_card_name,
       payment_day,
-    }: ReqBody = req.body;
+      commission_template,
+    }: Clinic  & Clinic_payment_information & Clinic_finance_options = req.body;
     const actually_date = moment(new Date());
     const actually_year = actually_date.year();
     const actually_month = actually_date.month();
     const next_payment_date = moment([actually_year, actually_month, payment_day, 10])
     .add(1, "month").toISOString();
-    console.log("sended, date: "+actually_date+" month: "+ actually_month+" year: " + actually_year + " day: "+ payment_day)
-    console.log("next payment is: " + next_payment_date);
+    // console.log("sended, date: "+actually_date+" month: "+ actually_month+" year: " + actually_year + " day: "+ payment_day)
+    // console.log("next payment is: " + next_payment_date);
     const new_clinic = await prisma.clinic.create({
       data: {
         cnpj: cnpj,
@@ -67,6 +54,12 @@ class ClinicController {
             debit_card_CCV: debit_card_CCV
           }
         },
+        Clinic_finance_options: {
+          create: {
+            calculation_hour_of_day: 18,
+            commission_template: commission_template
+          }
+        },
         logs: {
           create: {
             description:
@@ -79,7 +72,7 @@ class ClinicController {
         }
       }
     });
-    return res.status(201).send("You are registered now");
+    return res.status(201).json({response: "You are registered now", clinic: new_clinic});
   }
 }
 export default new ClinicController();

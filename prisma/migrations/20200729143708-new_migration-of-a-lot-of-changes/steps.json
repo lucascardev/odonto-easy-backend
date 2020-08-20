@@ -389,8 +389,8 @@
     {
       "tag": "CreateField",
       "model": "Clinic",
-      "field": "employeers",
-      "type": "Employeer",
+      "field": "employees",
+      "type": "Employer",
       "arity": "List"
     },
     {
@@ -955,6 +955,13 @@
     {
       "tag": "CreateField",
       "model": "Clinic_finance_options",
+      "field": "commission_template",
+      "type": "Float",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Clinic_finance_options",
       "field": "calculation_hour_of_day",
       "type": "Int",
       "arity": "Required"
@@ -1082,7 +1089,7 @@
         "directive": "relation"
       },
       "argument": "fields",
-      "value": "[clinid_id]"
+      "value": "[clinic_id]"
     },
     {
       "tag": "CreateArgument",
@@ -1101,7 +1108,7 @@
     {
       "tag": "CreateField",
       "model": "Clinic_finance_month",
-      "field": "clinid_id",
+      "field": "clinic_id",
       "type": "String",
       "arity": "Required"
     },
@@ -1143,7 +1150,7 @@
     {
       "tag": "CreateField",
       "model": "Clinic_finance_month",
-      "field": "dentists_comissions",
+      "field": "dentists_commissions",
       "type": "Float",
       "arity": "Optional"
     },
@@ -1314,7 +1321,7 @@
         "directive": "relation"
       },
       "argument": "fields",
-      "value": "[clinid_id]"
+      "value": "[clinic_id]"
     },
     {
       "tag": "CreateArgument",
@@ -1333,7 +1340,7 @@
     {
       "tag": "CreateField",
       "model": "Clinic_finance_day",
-      "field": "clinid_id",
+      "field": "clinic_id",
       "type": "String",
       "arity": "Required"
     },
@@ -1543,7 +1550,7 @@
         "directive": "relation"
       },
       "argument": "fields",
-      "value": "[clinid_id]"
+      "value": "[clinic_id]"
     },
     {
       "tag": "CreateArgument",
@@ -1562,7 +1569,7 @@
     {
       "tag": "CreateField",
       "model": "Chairs",
-      "field": "clinid_id",
+      "field": "clinic_id",
       "type": "String",
       "arity": "Required"
     },
@@ -1710,7 +1717,7 @@
         "directive": "relation"
       },
       "argument": "fields",
-      "value": "[clinid_id]"
+      "value": "[clinic_id]"
     },
     {
       "tag": "CreateArgument",
@@ -1729,7 +1736,7 @@
     {
       "tag": "CreateField",
       "model": "Chair_finance_day",
-      "field": "clinid_id",
+      "field": "clinic_id",
       "type": "String",
       "arity": "Required"
     },
@@ -1918,7 +1925,7 @@
         "directive": "relation"
       },
       "argument": "fields",
-      "value": "[clinid_id]"
+      "value": "[clinic_id]"
     },
     {
       "tag": "CreateArgument",
@@ -1937,7 +1944,7 @@
     {
       "tag": "CreateField",
       "model": "Clinic_finance_procedure",
-      "field": "clinid_id",
+      "field": "clinic_id",
       "type": "String",
       "arity": "Required"
     },
@@ -2149,7 +2156,7 @@
         "directive": "relation"
       },
       "argument": "fields",
-      "value": "[clinid_id]"
+      "value": "[clinic_id]"
     },
     {
       "tag": "CreateArgument",
@@ -2168,7 +2175,7 @@
     {
       "tag": "CreateField",
       "model": "Email",
-      "field": "clinid_id",
+      "field": "clinic_id",
       "type": "String",
       "arity": "Optional"
     },
@@ -3296,7 +3303,7 @@
     {
       "tag": "CreateField",
       "model": "Treatment_evolution",
-      "field": "shedule",
+      "field": "schedule",
       "type": "Schedule",
       "arity": "Required"
     },
@@ -3306,7 +3313,7 @@
         "path": {
           "tag": "Field",
           "model": "Treatment_evolution",
-          "field": "shedule"
+          "field": "schedule"
         },
         "directive": "relation"
       }
@@ -3318,7 +3325,7 @@
         "path": {
           "tag": "Field",
           "model": "Treatment_evolution",
-          "field": "shedule"
+          "field": "schedule"
         },
         "directive": "relation"
       },
@@ -3332,7 +3339,7 @@
         "path": {
           "tag": "Field",
           "model": "Treatment_evolution",
-          "field": "shedule"
+          "field": "schedule"
         },
         "directive": "relation"
       },
@@ -3347,6 +3354,17 @@
       "arity": "Required"
     },
     {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Treatment_evolution",
+          "field": "hour"
+        },
+        "directive": "unique"
+      }
+    },
+    {
       "tag": "CreateField",
       "model": "Treatment_evolution",
       "field": "date",
@@ -3354,9 +3372,119 @@
       "arity": "Required"
     },
     {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Treatment_evolution",
+          "field": "date"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Treatment_evolution",
+      "field": "dentist",
+      "type": "Dentist",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Treatment_evolution",
+          "field": "dentist"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Treatment_evolution",
+          "field": "dentist"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[dentist_id]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Treatment_evolution",
+          "field": "dentist"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
       "tag": "CreateField",
       "model": "Treatment_evolution",
       "field": "dentist_id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Treatment_evolution",
+      "field": "patient",
+      "type": "Patient",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Treatment_evolution",
+          "field": "patient"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Treatment_evolution",
+          "field": "patient"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[patient_id]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Treatment_evolution",
+          "field": "patient"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Treatment_evolution",
+      "field": "patient_id",
       "type": "String",
       "arity": "Required"
     },
@@ -3527,6 +3655,49 @@
     {
       "tag": "CreateModel",
       "model": "ProceduresOnTreatmentEvolution"
+    },
+    {
+      "tag": "CreateField",
+      "model": "ProceduresOnTreatmentEvolution",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "ProceduresOnTreatmentEvolution",
+          "field": "id"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "ProceduresOnTreatmentEvolution",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "ProceduresOnTreatmentEvolution",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
     },
     {
       "tag": "CreateField",
@@ -3794,7 +3965,7 @@
         "directive": "relation"
       },
       "argument": "fields",
-      "value": "[clinid_id]"
+      "value": "[clinic_id]"
     },
     {
       "tag": "CreateArgument",
@@ -3813,7 +3984,7 @@
     {
       "tag": "CreateField",
       "model": "Technicalmanager",
-      "field": "clinid_id",
+      "field": "clinic_id",
       "type": "String",
       "arity": "Required"
     },
@@ -3979,7 +4150,7 @@
         "directive": "relation"
       },
       "argument": "fields",
-      "value": "[clinid_id]"
+      "value": "[clinic_id]"
     },
     {
       "tag": "CreateArgument",
@@ -3998,7 +4169,7 @@
     {
       "tag": "CreateField",
       "model": "Legalresponsible",
-      "field": "clinid_id",
+      "field": "clinic_id",
       "type": "String",
       "arity": "Required"
     },
@@ -4109,7 +4280,7 @@
     {
       "tag": "CreateField",
       "model": "Patient",
-      "field": "clinic_prontuary_number",
+      "field": "clinic_registry_number",
       "type": "Int",
       "arity": "Required"
     },
@@ -4372,53 +4543,7 @@
       "model": "Patient",
       "field": "treatment_evolution",
       "type": "Treatment_evolution",
-      "arity": "Optional"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Patient",
-          "field": "treatment_evolution"
-        },
-        "directive": "relation"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Patient",
-          "field": "treatment_evolution"
-        },
-        "directive": "relation"
-      },
-      "argument": "fields",
-      "value": "[treatment_evolution_id]"
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Patient",
-          "field": "treatment_evolution"
-        },
-        "directive": "relation"
-      },
-      "argument": "references",
-      "value": "[id]"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Patient",
-      "field": "treatment_evolution_id",
-      "type": "String",
-      "arity": "Optional"
+      "arity": "List"
     },
     {
       "tag": "CreateField",
@@ -47123,9 +47248,9 @@
     {
       "tag": "CreateField",
       "model": "Dentist",
-      "field": "shedule",
+      "field": "schedule",
       "type": "Schedule",
-      "arity": "Required"
+      "arity": "Optional"
     },
     {
       "tag": "CreateField",
@@ -47264,7 +47389,7 @@
     {
       "tag": "CreateField",
       "model": "Dentist",
-      "field": "comission",
+      "field": "commission",
       "type": "Float",
       "arity": "Optional"
     },
@@ -47488,11 +47613,11 @@
     },
     {
       "tag": "CreateModel",
-      "model": "Employeer"
+      "model": "Employer"
     },
     {
       "tag": "CreateField",
-      "model": "Employeer",
+      "model": "Employer",
       "field": "id",
       "type": "String",
       "arity": "Required"
@@ -47502,7 +47627,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Employeer",
+          "model": "Employer",
           "field": "id"
         },
         "directive": "id"
@@ -47513,7 +47638,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Employeer",
+          "model": "Employer",
           "field": "id"
         },
         "directive": "default"
@@ -47525,7 +47650,7 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Employeer",
+          "model": "Employer",
           "field": "id"
         },
         "directive": "default"
@@ -47535,21 +47660,21 @@
     },
     {
       "tag": "CreateField",
-      "model": "Employeer",
+      "model": "Employer",
       "field": "firstname",
       "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
-      "model": "Employeer",
+      "model": "Employer",
       "field": "lastname",
       "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
-      "model": "Employeer",
+      "model": "Employer",
       "field": "username",
       "type": "String",
       "arity": "Required"
@@ -47559,7 +47684,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Employeer",
+          "model": "Employer",
           "field": "username"
         },
         "directive": "default"
@@ -47571,7 +47696,7 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Employeer",
+          "model": "Employer",
           "field": "username"
         },
         "directive": "default"
@@ -47581,7 +47706,7 @@
     },
     {
       "tag": "CreateField",
-      "model": "Employeer",
+      "model": "Employer",
       "field": "password",
       "type": "String",
       "arity": "Required"
@@ -47591,7 +47716,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Employeer",
+          "model": "Employer",
           "field": "password"
         },
         "directive": "default"
@@ -47603,7 +47728,7 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Employeer",
+          "model": "Employer",
           "field": "password"
         },
         "directive": "default"
@@ -47613,7 +47738,7 @@
     },
     {
       "tag": "CreateField",
-      "model": "Employeer",
+      "model": "Employer",
       "field": "clinic",
       "type": "Clinic",
       "arity": "Required"
@@ -47623,7 +47748,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Employeer",
+          "model": "Employer",
           "field": "clinic"
         },
         "directive": "relation"
@@ -47635,7 +47760,7 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Employeer",
+          "model": "Employer",
           "field": "clinic"
         },
         "directive": "relation"
@@ -47649,7 +47774,7 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Employeer",
+          "model": "Employer",
           "field": "clinic"
         },
         "directive": "relation"
@@ -47659,14 +47784,14 @@
     },
     {
       "tag": "CreateField",
-      "model": "Employeer",
+      "model": "Employer",
       "field": "clinic_id",
       "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
-      "model": "Employeer",
+      "model": "Employer",
       "field": "role",
       "type": "Clinic_Roles",
       "arity": "Required"
@@ -47676,7 +47801,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Employeer",
+          "model": "Employer",
           "field": "role"
         },
         "directive": "relation"
@@ -47688,7 +47813,7 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Employeer",
+          "model": "Employer",
           "field": "role"
         },
         "directive": "relation"
@@ -47702,7 +47827,7 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Employeer",
+          "model": "Employer",
           "field": "role"
         },
         "directive": "relation"
@@ -47712,14 +47837,14 @@
     },
     {
       "tag": "CreateField",
-      "model": "Employeer",
+      "model": "Employer",
       "field": "role_id",
       "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
-      "model": "Employeer",
+      "model": "Employer",
       "field": "createdAt",
       "type": "DateTime",
       "arity": "Required"
@@ -47729,7 +47854,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Employeer",
+          "model": "Employer",
           "field": "createdAt"
         },
         "directive": "default"
@@ -47741,7 +47866,7 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Employeer",
+          "model": "Employer",
           "field": "createdAt"
         },
         "directive": "default"
@@ -47751,7 +47876,7 @@
     },
     {
       "tag": "CreateField",
-      "model": "Employeer",
+      "model": "Employer",
       "field": "updatedAt",
       "type": "DateTime",
       "arity": "Required"
@@ -47761,7 +47886,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Employeer",
+          "model": "Employer",
           "field": "updatedAt"
         },
         "directive": "updatedAt"
@@ -47832,7 +47957,7 @@
       "tag": "CreateField",
       "model": "Clinic_Roles",
       "field": "employer",
-      "type": "Employeer",
+      "type": "Employer",
       "arity": "List"
     },
     {

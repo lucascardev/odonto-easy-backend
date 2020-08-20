@@ -1,15 +1,12 @@
-import express, { Application } from "express";
-import routes from "./routes";
+import app from "./app";
+require('dotenv').config({
+  path: process.env.NODE_ENV === 'test' ? ".env.test" : ".env"
+})
 
-const app: Application = express();
-app.use(express.json())
-app.use(routes);
+const HOST:string = process.env.HOST
+const PORT:number = 3000
 
-app.get("/", (request, response) => {
-  return response.json({ message: "Hello World new" });
-});
-
-app.listen(process.env.PORT || 3000, (err?: any) => {
+app.listen(PORT, HOST, (err?: any) => {
   if (err) throw err;
   console.log(`> Ready - environment of ${process.env.NODE_ENV}`);
 });

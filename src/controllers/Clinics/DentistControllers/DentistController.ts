@@ -19,7 +19,7 @@ class DentistController {
     return res.status(200).json(dentists);
   }
 
-  public async create(req:Request, res:Response): Promise<Response> {
+  public async store(req:Request, res:Response): Promise<Response> {
     const {CRO_number, firstname, lastname, commission, contactmeans, email, cellphone_number, ClinicId }: Dentist & ReqBody = req.body
     
     const clinicInformation = await prisma.clinic_finance_options.findOne({
@@ -27,6 +27,7 @@ class DentistController {
         id: ClinicId
       }
     })
+    console.log(clinicInformation);
     const newDentist = await prisma.dentist.create({
       data: {
         CRO_number: CRO_number,
@@ -47,7 +48,17 @@ class DentistController {
         }
       }
     })
-    return res.status(201).send("New dentist registered successfully").json({response: "New dentist registered successfully", newDentist});
+    const newLog = await prisma.logs.create({
+      data: {
+        clinic : {
+          connect : {
+            registered_id : ClinicId
+          }
+        },
+         description: "Dr."+firstname+lastname+ "with CRO number"+ CRO_number + "was registered" 
+      }
+    })
+    return res.status(201).json({response: "New dentist registered successfully", dentist: newDentist});
   }
 }
 

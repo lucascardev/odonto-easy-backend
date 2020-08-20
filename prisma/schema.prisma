@@ -238,7 +238,7 @@ model Schedule {
 
 model Treatment_evolution {
   id            String      @id@default(cuid())
-  shedule       Schedule    @relation(fields: [hour, date, dentist_id], references: [hour, date, dentist_id]) //BUG
+  schedule       Schedule    @relation(fields: [hour, date, dentist_id], references: [hour, date, dentist_id]) //
   hour          DateTime   @unique
   date          DateTime   @unique
   dentist       Dentist    @relation(fields: [dentist_id], references:[id])    
@@ -299,7 +299,7 @@ model Legalresponsible {
 
 model Patient {
   id               String      @id @default(uuid())
-  clinic_prontuary_number   Int
+  clinic_registry_number   Int
   // Patient Information
   fullname         String
   birth_date       DateTime
@@ -5723,7 +5723,7 @@ model Diet_questionnaire {
 model Main_anamnesis_questionnaire {
   id        String      @id @default(cuid())
   anamnesis_prontuary Anamnesis @relation(fields: [anamnesis_prontuary_id], references: [id])
-  anamnesis_prontuary_id String
+  anamnesis_prontuary_id String @unique
   // Health Information
   main_issue String
   recent_disease_history String
@@ -5745,7 +5745,7 @@ model Main_anamnesis_questionnaire {
   if_yes_when_made_it DateTime?
   has_any_importanting_bleeding yes_no
   if_yes_when DateTime?
-  if_yes_how_long_to_stop String
+  if_yes_how_long_to_stop String?
   have_problems_with_healing yes_no
   // Hormonal disease
   has_any_know_tireoids_issues yes_no
@@ -5813,7 +5813,7 @@ model Dentist {
   username      String       @default(cuid()) 
   password      String       @default(cuid())
   contactmeans  Contact_means?
-  shedule       Schedule?     
+  schedule       Schedule?     
   cellphone_number String?
   clinic    Clinic   @relation("Clinic_relation", fields: [clinic_id], references: [registered_id])
   clinic_id String

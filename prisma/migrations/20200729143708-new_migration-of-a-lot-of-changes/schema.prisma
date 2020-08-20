@@ -29,7 +29,7 @@ model Clinic {
   clinic_phones    Clinic_phones[]
   patients         Patient[]  
   destists         Dentist[]  
-  employeers       Employeer[] 
+  employees        Employer[] 
   technicalmanager Technicalmanager?  
   legalresponsible Legalresponsible? 
   //credentials
@@ -81,6 +81,7 @@ model Clinic_payment_information {
 model Clinic_finance_options {
   clinic  Clinic @relation(fields: [id], references: [registered_id])
   id      String @id
+  commission_template      Float 
   calculation_hour_of_day Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -89,15 +90,15 @@ model Clinic_finance_options {
 
 model Clinic_finance_month {
   id                  String        @default(cuid())
-  clinic              Clinic        @relation(fields: [clinid_id], references: [registered_id])
-  clinid_id           String
+  clinic              Clinic        @relation(fields: [clinic_id], references: [registered_id])
+  clinic_id           String
   month               Int          
   year                Int
   // Wages
   wage_payment_day     Int?
   wages_paid           Boolean?
   total_wage           Float?
-  dentists_comissions  Float? 
+  dentists_commissions  Float? 
   // Profit
   month_all_profit   Float?
   month_discounts    Float?
@@ -110,8 +111,8 @@ model Clinic_finance_month {
 
 model Clinic_finance_day {
   id        String        @default(cuid())
-  clinic              Clinic        @relation(fields: [clinid_id], references: [registered_id])
-  clinid_id           String
+  clinic              Clinic        @relation(fields: [clinic_id], references: [registered_id])
+  clinic_id           String
   day       Int
   month     Int          
   year      Int
@@ -128,8 +129,8 @@ model Clinic_finance_day {
 model Chairs {
   id        String        @id@default(cuid())
   name      String
-  clinic              Clinic        @relation(fields: [clinid_id], references: [registered_id])
-  clinid_id           String
+  clinic              Clinic        @relation(fields: [clinic_id], references: [registered_id])
+  clinic_id           String
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
   what_was_updated String[] 
@@ -138,8 +139,8 @@ model Chairs {
 model Chair_finance_day {
   chair        Chairs @relation(fields: [chair_id], references: [id])         
   chair_id     String
-  clinic              Clinic        @relation(fields: [clinid_id], references: [registered_id])
-  clinid_id           String
+  clinic              Clinic        @relation(fields: [clinic_id], references: [registered_id])
+  clinic_id           String
   day          Int
   month        Int          
   year         Int
@@ -153,8 +154,8 @@ model Chair_finance_day {
 
 model Clinic_finance_procedure {
   id                  String        @id@default(cuid())
-  clinic              Clinic        @relation(fields: [clinid_id], references: [registered_id])
-  clinid_id           String
+  clinic              Clinic        @relation(fields: [clinic_id], references: [registered_id])
+  clinic_id           String
   treatment Treatment_evolution @relation(fields: [treatment_evolution_registry_id], references: [id])
   treatment_evolution_registry_id String
   payment_status                  Payment_status
@@ -173,8 +174,8 @@ enum Payment_status {
 model Email {
   id         String        @default(cuid())
   email      String        @unique
-  clinic     Clinic?       @relation(fields: [clinid_id], references: [registered_id])
-  clinid_id  String?
+  clinic     Clinic?       @relation(fields: [clinic_id], references: [registered_id])
+  clinic_id  String?
   techinical_mananger    Technicalmanager? @relation("Technical_mananger_relation", fields: [techinical_mananger_id], references: [cpf])
   techinical_mananger_id String?
   legal_responsible      Legalresponsible? @relation("Legal_responsible_relation",fields: [legal_responsible_id], references: [cpf])
@@ -196,7 +197,7 @@ model Logs {
 
 model Clinic_phones {
   id               String       @id @default(cuid())
-  clinic           Clinic    @relation(fields: [clinic_id], references: [registered_id])
+  clinic           Clinic       @relation(fields: [clinic_id], references: [registered_id])
   clinic_id        String
   phonetype        Phonetypes
   phone_number     String    @unique
@@ -237,11 +238,14 @@ model Schedule {
 
 model Treatment_evolution {
   id            String      @id@default(cuid())
-  shedule       Schedule    @relation(fields: [hour, date, dentist_id], references: [hour, date, dentist_id])
-  hour          DateTime    
-  date          DateTime    
+  schedule       Schedule    @relation(fields: [hour, date, dentist_id], references: [hour, date, dentist_id]) //
+  hour          DateTime   @unique
+  date          DateTime   @unique
+  dentist       Dentist    @relation(fields: [dentist_id], references:[id])    
   dentist_id    String
-  treatment     ProceduresOnTreatmentEvolution[]
+  patient       Patient    @relation(fields: [patient_id], references:[id])
+  patient_id    String
+  treatment      ProceduresOnTreatmentEvolution[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   what_was_updated String[] 
@@ -258,6 +262,7 @@ model Procedures {
 }
 
 model ProceduresOnTreatmentEvolution {
+  id             String     @unique@default(cuid())
   procedures     Procedures @relation(fields: [procedures_id], references: [codigo_CID])
   procedures_id  String
   treatment_evolution Treatment_evolution @relation(fields: [treatment_evolution_id], references: [id])
@@ -272,8 +277,8 @@ model Technicalmanager {
   contactmeans Contact_means
   active    Boolean  @default(true)
   email     Email[]
-  clinic    Clinic @relation(fields: [clinid_id], references: [registered_id])
-  clinid_id String
+  clinic    Clinic @relation(fields: [clinic_id], references: [registered_id])
+  clinic_id String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   what_was_updated String[] 
@@ -285,24 +290,24 @@ model Legalresponsible {
    contactmeans Contact_means? 
    active    Boolean  @default(true)
    email     Email[]
-   clinic    Clinic @relation(fields: [clinid_id], references: [registered_id])
-   clinid_id String
+   clinic    Clinic @relation(fields: [clinic_id], references: [registered_id])
+   clinic_id String
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
    what_was_updated String[] 
 }
 
 model Patient {
-  id            String      @id @default(uuid())
-  clinic_prontuary_number   Int
+  id               String      @id @default(uuid())
+  clinic_registry_number   Int
   // Patient Information
-  fullname      String
-  birth_date    DateTime
-  age           Int
-  gender        Gender
-  brazilian_cpf String?      @unique
-  brazilian_rg  String?      @unique
-  password      String       
+  fullname         String
+  birth_date       DateTime
+  age              Int
+  gender           Gender
+  brazilian_cpf    String?      @unique
+  brazilian_rg     String?      @unique
+  password         String      
   clinic           Clinic    @relation("Patientof", fields: [clinic_id], references: [registered_id])
   clinic_id        String
   cellphone_number String?
@@ -316,8 +321,7 @@ model Patient {
   dont_know     Dont_know_questions? @relation("Dontknowquestionnaires", fields: [dont_know_id], references: [id])
   dont_know_id  String?
   //Clinic related information
-  treatment_evolution    Treatment_evolution? @relation(fields: [treatment_evolution_id], references: [id])
-  treatment_evolution_id String?
+  treatment_evolution    Treatment_evolution[]
   dentists               Dentist[]    @relation(references: [id])
   contactmeans           Contact_means? 
   last_visit_dentist     DateTime
@@ -5809,7 +5813,7 @@ model Dentist {
   username      String       @default(cuid()) 
   password      String       @default(cuid())
   contactmeans  Contact_means?
-  shedule       Schedule     
+  schedule       Schedule?     
   cellphone_number String?
   clinic    Clinic   @relation("Clinic_relation", fields: [clinic_id], references: [registered_id])
   clinic_id String
@@ -5818,7 +5822,7 @@ model Dentist {
   specialization Clinic_specializations[]
   ortodontics_treatments Ortodontics[]
   implantology_treatments Implantology[]  
-  comission Float?
+  commission Float?      
   patients  Patient[]   @relation(references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -5854,7 +5858,7 @@ enum Specializations {
    ORAL_PATHOLOGY
 }
 
-model Employeer {
+model Employer {
   id        String      @id @default(uuid())
   firstname String
   lastname  String
@@ -5872,7 +5876,7 @@ model Clinic_Roles {
   id           String      @id @default(cuid())
   name         String
   description  String?
-  employer     Employeer[]
+  employer     Employer[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

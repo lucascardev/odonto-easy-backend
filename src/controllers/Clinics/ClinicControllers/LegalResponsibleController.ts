@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Legalresponsible } from "@prisma/client";
 import { Request, Response } from "express";
 const prisma = new PrismaClient();
 
@@ -17,6 +17,32 @@ class LegalResponsible {
       },
     });
     return res.status(200).json(ClinicLegalResponsible);
+  }
+  public async store(req: Request, res: Response): Promise<Response>{
+  const {cpf, ClinicId, fullname, contactmeans}: Legalresponsible & ReqBody = req.body
+  const newLegalResponsible = await prisma.legalresponsible.create({
+    data: {
+      cpf: cpf,
+      fullname: fullname,
+      contactmeans: contactmeans,
+      clinic: {
+        connect: {
+          registered_id: ClinicId
+        }
+      }
+    }
+  })
+  const newLog = await prisma.logs.create({
+    data: {
+      clinic : {
+        connect : {
+          registered_id : ClinicId
+        }
+      },
+       description: "Legal responsible "+fullname+ " with cpf number:"+ cpf + "was registered" 
+    }
+  })
+  return res.status(201).send("Clinic LR registered successfully").json({response: "LR registered successfully", TM: newLegalResponsible});
   }
 }
 
