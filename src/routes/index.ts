@@ -37,6 +37,4 @@ routes.post("/clinic/patients/new", PatientController.store)
 routes.post("/clinic/patients/documents/questionnaires/anamnesis/new", AnamnesisController.store)
 
 
-
-
 export default routes;
